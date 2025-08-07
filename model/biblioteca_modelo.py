@@ -50,3 +50,20 @@ def nombre_biblioteca_existe(nombre_biblioteca):
     finally:
         cursor.close()
         conexion.close()
+
+
+
+def obtener_biblioteca():
+    try:
+        conexion = obtener_conexion()
+        cursor = conexion.cursor()
+        cursor.execute("SELECT id_biblioteca, nombre, ubicacion FROM biblioteca ORDER BY id_biblioteca")
+        bibliotecas = cursor.fetchall()
+        return bibliotecas
+
+    except Exception as error:
+        print("Error al insertar datos:",error)
+        conexion.rollback()
+    finally:
+        cursor.close()
+        conexion.close()

@@ -1,6 +1,6 @@
 import tkinter as tk
-from tkinter import messagebox
-from model.biblioteca_modelo import agregar_biblioteca, nombre_biblioteca_existe
+from tkinter import messagebox, ttk
+from model.biblioteca_modelo import agregar_biblioteca, nombre_biblioteca_existe, obtener_biblioteca
 from gui.formulario_libros import crear_libro
 def crear_biblioteca(root:tk.Tk):
     root.title("Formulario bilbioteca")
@@ -34,6 +34,7 @@ def crear_biblioteca(root:tk.Tk):
                 messagebox.showerror("Error", f"Ya existe una biblioteca con el nombre '{nombre}'.")
                 return
             agregar_biblioteca(id, nombre, ubicacion)
+            cargar_biblioteca()
             messagebox.showinfo("Mensaje", "Biblioteca agregada con exito!")
         except Exception as e:
             messagebox.showerror("Error", str(e))
@@ -43,3 +44,29 @@ def crear_biblioteca(root:tk.Tk):
 
     boton_agregarLibro = tk.Button(root, text="Agregar libro", command=crear_libro)
     boton_agregarLibro.grid(row=4, column=1, padx=5, pady=5)
+
+    # Vamos a mostrar una tablita:
+    lista_biblioteca = tk.Label(root, text = "Listado biblioteca")
+    lista_biblioteca.grid(row=5, column=0, columnspan=2)
+
+    tabla = ttk.Treeview(root, columns=("ID", "NOMBRE", "UBICACION"), show="headings")
+    tabla.heading("ID", text="ID")
+    tabla.heading("NOMBRE", text="Nombre")
+    tabla.heading("UBICACION", text="Ubicación")
+    tabla.grid(row=6, column=0, columnspan=2, padx=10, pady=5)
+
+    # Función para cargar bibliotecas
+    def cargar_biblioteca():
+        try:
+            for fila in tabla.get_children():
+                tabla.delete(fila)
+
+            biblioteca = obtener_biblioteca()
+            for b in biblioteca:
+                tabla.insert("", "end", values=b)
+
+        except Exception as error:
+            messagebox.showerror("Error", f"No se pudieron cargar las bibliotecas:\n{error}")
+
+    # Cargar datos al inicio
+    cargar_biblioteca()
