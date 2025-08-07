@@ -1,3 +1,4 @@
+# Creacion de pantalla
 import tkinter as tk
 from gui.formaulario_biblioteca import crear_biblioteca
 ventana = tk.Tk()
